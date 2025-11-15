@@ -8,13 +8,22 @@ pub const ANCHOR_DISCRIMINATOR_SIZE: usize = 8;
 pub mod favourites {
     use super::*;
 
-    pub fn set_favourites(context: Context<SetFavourites>, number: u64, colour: String, hobbies: Vec<String>,) -> Result<()> {
+    pub fn set_favourites(
+        context: Context<SetFavourites>,
+        number: u64,
+        colour: String,
+        hobbies: Vec<String>,
+    ) -> Result<()> {
         msg!("Greeting from {}", context.program_id);
         let user_public_key = context.accounts.user.key();
 
         msg!("User {user_public_key}'s favourite number is {number}, favourite colour is {colour} and hobbies are {hobbies:?}");
 
-        context.accounts.favouorites.set_inner(Favourites { number, colour, hobbies });
+        context.accounts.favourites.set_inner(Favourites {
+            number,
+            colour,
+            hobbies,
+        });
 
         Ok(())
     }
@@ -44,7 +53,7 @@ pub struct SetFavourites<'info> {
         seeds = [b"favourites", user.key().as_ref()],
         bump
     )]
-    pub favouorites: Account<'info, Favourites>,
+    pub favourites: Account<'info, Favourites>,
 
     pub system_program: Program<'info, System>,
 }
